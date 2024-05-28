@@ -2,17 +2,13 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/khusainnov/newbee/app/errors"
 	"github.com/khusainnov/newbee/app/processors/education_material"
 	"github.com/khusainnov/newbee/app/specs"
-)
-
-var (
-	EmptyRequestBody = "request has empty data"
 )
 
 type Handlers interface {
@@ -20,7 +16,15 @@ type Handlers interface {
 }
 
 type Support interface {
-	SaveEducationMaterial(r *http.Request, req *specs.CreateCourseReq, resp *specs.Resp) error
+	EducationMaterial
+}
+
+type EducationMaterial interface {
+	SaveEducationMaterial(r *http.Request, req *specs.AddEducationMaterialReq, resp *specs.Resp) error
+	UpdateEducationMaterial(r *http.Request, req *specs.UpdateEducationMaterialReq, resp *specs.Resp) error
+}
+
+type Task interface {
 }
 
 type API struct {
@@ -41,15 +45,22 @@ func (a *API) Echo(_ *http.Request, req *specs.EchoReq, resp *specs.Resp) error 
 	return nil
 }
 
-func (a *API) SaveEducationMaterial(r *http.Request, req *specs.CreateCourseReq, resp *specs.Resp) error {
-	if len(req.Courses) == 0 {
-		resp.Message = EmptyRequestBody
+func (a *API) SaveEducationMaterial(r *http.Request, req *specs.AddEducationMaterialReq, resp *specs.Resp) error {
+	if len(req.EducationMaterials) == 0 {
+		resp.Message = errors.EmptyRequestBody
 		r.Response.Status = "-32001"
 		return nil
 	}
 
-	fmt.Printf("\n%v\n", *req.Courses[0])
-	ctx := context.Background()
+	return a.emProcessor.InsertEducationMaterial(context.Background(), a.db, req.EducationMaterials)
+}
 
-	return a.emProcessor.InsertEducationMaterial(ctx, a.db, req.Courses)
+func (a *API) UpdateEducationMaterial(r *http.Request, req *specs.UpdateEducationMaterialReq, resp *specs.Resp) error {
+	if req.EducationMaterial.ID == "" {
+		resp.Message = errors.EmptyEducationMaterialID
+		r.Response.Status = "-32003"
+		return nil
+	}
+	
+	return a.emProcessor.UpdateEducationMaterial(context.Background(), a.db, req.EducationMaterial)
 }

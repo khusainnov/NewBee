@@ -42,7 +42,6 @@ func (r *EducationMaterialRepo) SaveEducationMaterial(
 	)
 
 	args := make([]any, 0, numEducationMeterials*educationMaterialsNumFields)
-
 	for _, em := range data {
 		args = append(
 			args,
@@ -57,4 +56,26 @@ func (r *EducationMaterialRepo) SaveEducationMaterial(
 	_, err := db.ExecContext(ctx, query, args...)
 
 	return errors.WrapIfErr(err, "failed to save education material")
+}
+
+func (r *EducationMaterialRepo) UpdateEducationMaterial(
+	ctx context.Context,
+	db *sqlx.DB,
+	edMaterial *models.EducationMaterial,
+) error {
+	query := `UPDATE education_material
+				SET name=$1, description=$2, category=$3, material_url=$4, updated_at=now()
+					WHERE id = $5;`
+
+	_, err := db.ExecContext(
+		ctx,
+		query,
+		edMaterial.Name,
+		edMaterial.Description,
+		edMaterial.Category,
+		edMaterial.MaterialLink,
+		edMaterial.ID,
+	)
+
+	return errors.WrapIfErr(err, "failed to update education material with task_id: "+edMaterial.TaskID)
 }
