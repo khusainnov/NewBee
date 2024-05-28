@@ -79,3 +79,28 @@ func (r *EducationMaterialRepo) UpdateEducationMaterial(
 
 	return errors.WrapIfErr(err, "failed to update education material with task_id: "+edMaterial.TaskID)
 }
+
+func (r *EducationMaterialRepo) GetEducationMaterial(
+	ctx context.Context,
+	db *sqlx.DB,
+	id string,
+) (*models.EducationMaterial, error) {
+	query := `SELECT id, name, description, category, material_url, task_id, created_at, updated_at 
+				FROM education_material
+					WHERE id = $1;`
+
+	var resp models.EducationMaterial
+	if err := db.GetContext(ctx, &resp, query, id); err != nil {
+		return nil, errors.WrapIfErr(err, "failed to get education material by id")
+	}
+
+	return &resp, nil
+}
+
+func (r *EducationMaterialRepo) DeleteEducationMaterial(ctx context.Context, db *sqlx.DB, id string) error {
+	query := `DELETE FROM education_material WHERE id = $1;`
+
+	_, err := db.ExecContext(ctx, query, id)
+
+	return errors.WrapIfErr(err, "failed to delete education material")
+}
