@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS education_material;
 DROP TABLE IF EXISTS task;
 DROP TABLE IF EXISTS document;
 DROP TABLE IF EXISTS "user";

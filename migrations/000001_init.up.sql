@@ -72,12 +72,22 @@ CREATE TABLE IF NOT EXISTS task
     name        TEXT        NOT NULL,
     description TEXT        NOT NULL,
     status      VARCHAR(20),
-    user_id     UUID        NOT NULL,
+    user_id     TEXT,
     due_to      TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-    FOREIGN KEY (user_id)
-        REFERENCES "user" (id) ON DELETE CASCADE ON UPDATE CASCADE
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- TODO: specify `EducationMaterial` table
+CREATE TABLE IF NOT EXISTS education_material
+(
+    id           UUID                 DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    name         TEXT        NOT NULL,
+    description  TEXT        NOT NULL,
+    category     TEXT        NOT NULL,
+    material_url TEXT        NOT NULL,
+    task_id      UUID        NOT NULL,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    FOREIGN KEY (task_id)
+        REFERENCES task (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
