@@ -6,6 +6,7 @@ import (
 
 	"github.com/khusainnov/newbee/app/errors"
 	"github.com/khusainnov/newbee/app/specs"
+	"go.uber.org/zap"
 )
 
 func (a *API) SaveEducationMaterial(r *http.Request, req *specs.AddEducationMaterialReq, resp *specs.Resp) error {
@@ -35,7 +36,8 @@ func (a *API) GetEducationMaterial(
 ) error {
 	data, err := a.emProcessor.GetEducationMaterial(context.Background(), a.db, req.ID)
 	if err != nil {
-		r.Response.Status = "-32005"
+		a.log.Error("failed to get education material", zap.Error(err))
+
 		return err
 	}
 

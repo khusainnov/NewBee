@@ -23,10 +23,14 @@ type EducationMaterial interface {
 }
 
 type Task interface {
-	CreateTask(r *http.Request, resp *specs.Resp) error
-	UpdateTask(r *http.Request, resp *specs.Resp) error
-	GetTask(r *http.Request, resp *specs.GetTaskResp) error
-	GetTaskWithMaterials(r *http.Request, resp *specs.GetTaskWithMaterialsResp) error
-	ListTask(r *http.Request, resp *specs.ListTaskResp) error
-	DeleteTask(r *http.Request, resp *specs.Resp) error
+	CreateTask(r *http.Request, req *specs.CreateTaskReq, resp *specs.Resp) error
+	UpdateTask(r *http.Request, req *specs.UpdateTaskReq, resp *specs.Resp) error
+	GetTask(r *http.Request, req *specs.GetTaskReq, resp *specs.GetTaskResp) error
+	GetTaskWithMaterials(
+		r *http.Request,
+		req *specs.GetTaskWithMaterialsReq,
+		resp *specs.GetTaskWithMaterialsResp,
+	) error
+	ListTask(r *http.Request, req *specs.ListTaskReq, resp *specs.ListTaskResp) error
+	DeleteTask(r *http.Request, req *specs.DeleteTaskReq, resp *specs.Resp) error
 }

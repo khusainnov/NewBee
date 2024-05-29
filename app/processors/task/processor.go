@@ -39,25 +39,29 @@ func New(log *zap.Logger, taskRepo TaskRepo) *Processor {
 }
 
 func (p *Processor) InsertTask(ctx context.Context, db *sqlx.DB, task *models.Task) error {
-	return nil
+	return p.taskRepo.SaveTask(ctx, db, task)
 }
 
 func (p *Processor) UpdateTask(ctx context.Context, db *sqlx.DB, task *models.Task) error {
-	return nil
+	return p.taskRepo.UpdateTask(ctx, db, task)
 }
 
 func (p *Processor) GetTask(ctx context.Context, db *sqlx.DB, id string) (*models.Task, error) {
-	return nil, nil
+	return p.taskRepo.GetTask(ctx, db, id)
 }
 
-func (p *Processor) GetTaskWithMaterials(ctx context.Context, db *sqlx.DB, id string) (*models.TaskWithMaterials, error) {
-	return nil, nil
+func (p *Processor) GetTaskWithMaterials(
+	ctx context.Context,
+	db *sqlx.DB,
+	id string,
+) (*models.TaskWithMaterials, error) {
+	return p.taskRepo.GetTaskWithMaterials(ctx, db, id)
 }
 
 func (p *Processor) ListTask(ctx context.Context, db *sqlx.DB) ([]*models.Task, error) {
-	return nil, nil
+	return p.taskRepo.ListTask(ctx, db)
 }
 
 func (p *Processor) DeleteTask(ctx context.Context, db *sqlx.DB, id string) error {
-	return nil
+	return p.taskRepo.DeleteTask(ctx, db, id)
 }

@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/caarlos0/env/v6"
@@ -10,8 +9,6 @@ import (
 	"github.com/gorilla/rpc/v2/json2"
 	"github.com/khusainnov/newbee/app/api"
 	"github.com/khusainnov/newbee/app/config"
-	"github.com/khusainnov/newbee/app/processors/education_material"
-	"github.com/khusainnov/newbee/app/repository"
 	"github.com/khusainnov/newbee/app/resources/storage"
 	"go.uber.org/zap"
 )
@@ -19,13 +16,13 @@ import (
 func Run() {
 	cfg := newConfig()
 	log := cfg.Log
-	fmt.Printf("\n%v\n", cfg)
+
 	client, err := storage.New(log, cfg.Storage)
 	if err != nil {
 		log.Fatal("failed to init storage", zap.Error(err))
 	}
 
-	apis := api.NewAPI(client.GetDB(), education_material.New(log, repository.NewEducationMaterialRepo()))
+	apis := api.NewAPI(log, client.GetDB())
 
 	router := mux.NewRouter()
 

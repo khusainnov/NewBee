@@ -10,14 +10,14 @@ var (
 )
 
 type Task struct {
-	ID          string     `json:"id,omitempty"`
-	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Status      TaskStatus `json:"status"`
-	UserID      string     `json:"user_id,omitempty"`
-	DueTo       string     `json:"due_to"`
-	CreatedAt   string     `json:"created_at,omitempty"`
-	UpdatedAt   string     `json:"updated_at,omitempty"`
+	ID          string     `json:"id,omitempty" db:"id"`
+	Name        string     `json:"name" db:"name"`
+	Description string     `json:"description" db:"description"`
+	Status      TaskStatus `json:"status" db:"status"`
+	UserID      string     `json:"user_id,omitempty" db:"user_id"`
+	DueTo       string     `json:"due_to" db:"due_to"`
+	CreatedAt   string     `json:"created_at,omitempty" db:"created_at"`
+	UpdatedAt   string     `json:"updated_at,omitempty" db:"updated_at"`
 }
 
 type TaskWithMaterials struct {

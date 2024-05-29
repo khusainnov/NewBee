@@ -6,18 +6,28 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/khusainnov/newbee/app/processors/education_material"
+	"github.com/khusainnov/newbee/app/processors/task"
+	"github.com/khusainnov/newbee/app/repository"
 	"github.com/khusainnov/newbee/app/specs"
+	"go.uber.org/zap"
 )
 
 type API struct {
-	db          *sqlx.DB
-	emProcessor education_material.EducationMaterialProcessor
+	db            *sqlx.DB
+	log           *zap.Logger
+	emProcessor   education_material.EducationMaterialProcessor
+	taskProcessor task.TaskProcessor
 }
 
-func NewAPI(db *sqlx.DB, emProcessor education_material.EducationMaterialProcessor) *API {
+func NewAPI(
+	log *zap.Logger,
+	db *sqlx.DB,
+) *API {
 	return &API{
-		db:          db,
-		emProcessor: emProcessor,
+		db:            db,
+		log:           log,
+		emProcessor:   education_material.New(log, repository.NewEducationMaterialRepo()),
+		taskProcessor: task.New(log, repository.NewTaskRepo()),
 	}
 }
 
